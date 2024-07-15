@@ -1,7 +1,5 @@
 require('config.lazy')
-require("lsp-format").setup {
-
-}
+require("lsp-format").setup{}
 
 require 'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "zig" },
@@ -16,7 +14,8 @@ require 'nvim-treesitter.configs'.setup {
 
 require 'lspconfig'.zls.setup({
   on_attach = function(client, bufnr)
-    --    require("lsp-format").on_attach(client, bufnr)
+    require("lsp-format").on_attach(client, bufnr)
+    vim.cmd [[syn region myFold start="{" end="}" transparent fold]]
   end
 })
 require 'lspconfig'.lua_ls.setup({
@@ -36,7 +35,7 @@ require 'lspconfig'.lua_ls.setup({
     Lua = {},
   },
   on_attach = function(client, bufnr)
-    require("lsp-format").on_attach(client, bufnr)
+    --    require("lsp-format").on_attach(client, bufnr)
   end
 })
 
@@ -46,9 +45,13 @@ vim.opt.expandtab = true
 vim.opt.ignorecase = true
 vim.opt.number = true
 vim.opt.cursorline = true
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+--vim.api.nvim_create_autocmd("BufEnter", {
+--  command = [[syn region myFold start="{" end="}" transparent fold]],
+--})
+--vim.opt.foldmethod = 'syntax'
 vim.opt.foldnestmax = 4
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldtext = "'[+] '.getline(v:foldstart)"
 
 vim.cmd [[colorscheme dracula]]

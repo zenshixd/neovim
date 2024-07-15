@@ -1,4 +1,3 @@
--- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -15,13 +14,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
---vim.g.mapleader = " "
---vim.g.maplocalleader = "\\"
-
--- Setup lazy.nvim
 require("lazy").setup({
   spec = {
     {
@@ -93,7 +85,23 @@ require("lazy").setup({
         vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
         vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
       end
-    }
+    },
+    {
+      "kevinhwang91/nvim-ufo",
+      dependencies = {
+        "kevinhwang91/promise-async",
+      },
+      config = function()
+        require("ufo").setup({
+          ["preview.win_config.winhighlight"] = "Normal:Folded",
+          provider_selector = function(bufnr, filetype, filename)
+            return {'treesitter', 'indent'}
+          end,
+        })
+        vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+        vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+      end
+    },
   },
   defaults = {
     version = "*",
