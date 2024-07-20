@@ -93,7 +93,6 @@ require("lazy").setup({
       },
       config = function()
         require("ufo").setup({
-          ["preview.win_config.winhighlight"] = "Normal:Folded",
           provider_selector = function(bufnr, filetype, filename)
             return {'treesitter', 'indent'}
           end,

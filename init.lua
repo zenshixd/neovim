@@ -10,12 +10,15 @@ require 'nvim-treesitter.configs'.setup {
     enable = true,
     additional_vim_regex_highlighting = false,
   },
+  indent = {
+    enable = false,
+  }
 }
 
 require 'lspconfig'.zls.setup({
   on_attach = function(client, bufnr)
     require("lsp-format").on_attach(client, bufnr)
-    vim.cmd [[syn region myFold start="{" end="}" transparent fold]]
+    vim.g.zig_fmt_autosave = false
   end
 })
 require 'lspconfig'.lua_ls.setup({
@@ -49,16 +52,34 @@ vim.opt.cursorline = true
 --  command = [[syn region myFold start="{" end="}" transparent fold]],
 --})
 --vim.opt.foldmethod = 'syntax'
-vim.opt.foldnestmax = 4
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt.foldtext = "'[+] '.getline(v:foldstart)"
+--vim.opt.foldnestmax = 4
+vim.opt.foldcolumn = '1'
+vim.opt.foldmethod = 'manual'
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.g.zig_fmt_autosave = false
 
 vim.cmd [[colorscheme dracula]]
 
 function ToggleTerm()
-  vim.api.nvim_command('bel :term')
+  local wins = vim.api.nvim_list_wins()
+  local term_window = nil
+  for _, win in ipairs(wins) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local buf_title = vim.api.nvim_buf_get_name(buf)
+    if buf_title:match("^term://") ~= nil then
+      term_window = win
+      break
+    end
+  end
+
+  if term_window ~= nil then
+    vim.api.nvim_set_current_win(term_window)
+  else
+    vim.api.nvim_command('bel :term powershell')
+  end
 end
 
-vim.keymap.set('n', '<leader>tt', ToggleTerm, {})
-vim.keymap.set('t', '<Esc>', '<C-\\><C-n><C-w>k')
+vim.keymap.set('n', '<leader>t', ToggleTerm, {})
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+vim.keymap.set('t', '<leader><Esc>', '<C-\\><C-n><C-w>k')
