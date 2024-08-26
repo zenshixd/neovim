@@ -1,5 +1,5 @@
 require('config.lazy')
-require("lsp-format").setup{}
+require("lsp-format").setup {}
 
 require 'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "zig", "typescript", "javascript", "json", "json5" },
@@ -17,35 +17,33 @@ require 'mason'.setup()
 require 'mason-lspconfig'.setup()
 
 require("mason-lspconfig").setup_handlers {
-    function (server_name) -- default handler (optional)
-        require("lspconfig")[server_name].setup {
-          on_init = function(client, bufnr)
-            require("lsp-format").on_attach(client, bufnr)
-            vim.g.zig_fmt_autosave = false
-          end
-        }
-        require 'lspconfig'.lua_ls.setup({
-          on_init = function(client, bufnr)
-            client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-              runtime = {
-                version = "LuaJIT",
-              },
-              workspace = {
-                library = {
-                  vim.env.VIMRUNTIME
-                },
-              },
-            })
-          end,
-          settings = { Lua = {} },
+  function(server_name)    -- default handler (optional)
+    require("lspconfig")[server_name].setup {
+      on_init = function()
+        vim.g.zig_fmt_autosave = false
+      end,
+      on_attach = function(client, bufnr)
+        require("lsp-format").on_attach(client, bufnr)
+      end
+    }
+  end,
+  ["lua_ls"] = function()
+    require("lspconfig").lua_ls.setup {
+      on_init = function(client)
+        client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
+          runtime = {
+            version = "LuaJIT",
+          },
+          workspace = {
+            library = {
+              vim.env.VIMRUNTIME
+            },
+          },
         })
-        require 'lspconfig'.zls.setup({
-          on_attach = function(client, bufnr)
-            require("lsp-format").on_attach(client, bufnr)
-            vim.g.zig_fmt_autosave = false
-          end
-        })
-    end,
+      end,
+      settings = { Lua = {} },
+    }
+  end,
 }
 
 vim.opt.tabstop = 2
@@ -88,4 +86,3 @@ end
 vim.keymap.set('n', '<leader>t', ToggleTerm, {})
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 vim.keymap.set('t', '<leader><Esc>', '<C-\\><C-n><C-w>k')
-
