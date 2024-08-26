@@ -33,6 +33,8 @@ require("lazy").setup({
         require("supermaven-nvim").setup({})
       end,
     },
+    { "williamboman/mason.nvim" },
+    { "williamboman/mason-lspconfig.nvim" },
     {
       "neovim/nvim-lspconfig",
       lazy = false,
@@ -64,7 +66,6 @@ require("lazy").setup({
         }
       end,
     },
-    { 'kosayoda/nvim-lightbulb' },
     { "lukas-reineke/lsp-format.nvim" },
     {
       "windwp/nvim-autopairs",
