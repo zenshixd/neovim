@@ -1,6 +1,11 @@
 require('config.lazy')
 require("lsp-format").setup {}
 
+require("persisted").setup({
+  autoload = true,
+  use_git_branch = true,
+  allowed_dirs = { "~/Projects" },
+})
 require 'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "zig", "typescript", "javascript", "json", "json5" },
   sync_install = false,
@@ -86,3 +91,4 @@ end
 vim.keymap.set('n', '<leader>t', ToggleTerm, {})
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 vim.keymap.set('t', '<leader><Esc>', '<C-\\><C-n><C-w>k')
+vim.keymap.set('n', '<leader>qq', ':qa<CR>')
