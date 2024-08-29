@@ -16,6 +16,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   spec = {
+    { "nvimtools/none-ls.nvim" },
+    { "nvimtools/none-ls-extras.nvim", dependencies = { "nvimtools/none-ls.nvim" } },
     {
       "nvim-treesitter/nvim-treesitter",
       build = ":TSUpdate",
@@ -32,9 +34,11 @@ require("lazy").setup({
       init = function()
         require("supermaven-nvim").setup({})
       end,
+      cond = function() return vim.fn.getcwd():find('wkapp%-taskflow') == nil end,
     },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
+    { "lukas-reineke/lsp-format.nvim" },
     {
       "neovim/nvim-lspconfig",
       lazy = false,
@@ -66,7 +70,6 @@ require("lazy").setup({
         }
       end,
     },
-    { "lukas-reineke/lsp-format.nvim" },
     {
       "windwp/nvim-autopairs",
       event = "InsertEnter",
@@ -114,7 +117,19 @@ require("lazy").setup({
         require("persisted").setup(opts)
       end,
       lazy = false,
-    }
+    },
+    {
+      'romgrk/barbar.nvim',
+      dependencies = {
+        'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+        'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
+      },
+      init = function() vim.g.barbar_auto_setup = false end,
+      opts = {
+        exclude_name = { 'term://', 'zsh' },
+      },
+      version = '^1.0.0', -- optional: only update when a new 1.x version is released
+    },
   },
   defaults = {
     version = "*",
