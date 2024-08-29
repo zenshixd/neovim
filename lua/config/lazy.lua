@@ -16,7 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   spec = {
-    { "nvimtools/none-ls.nvim" },
+    { "nvimtools/none-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
     { "nvimtools/none-ls-extras.nvim", dependencies = { "nvimtools/none-ls.nvim" } },
     {
       "nvim-treesitter/nvim-treesitter",
@@ -125,11 +125,13 @@ require("lazy").setup({
         'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
       },
       init = function() vim.g.barbar_auto_setup = false end,
-      opts = {
-        exclude_name = { 'term://', 'zsh' },
-      },
+      opts = {},
       version = '^1.0.0', -- optional: only update when a new 1.x version is released
     },
+    {
+      'stevearc/overseer.nvim',
+      opts = {},
+    }
   },
   defaults = {
     version = "*",
