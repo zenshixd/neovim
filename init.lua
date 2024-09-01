@@ -19,6 +19,23 @@ require("persisted").setup({
     vim.notify("No existing session to load.")
   end
 })
+local function get_cwd_as_name()
+  local dir = vim.fn.getcwd(0)
+  return dir:gsub("[^A-Za-z0-9]", "_")
+end
+vim.api.nvim_create_autocmd("User", {
+  pattern = "PersistedLoadPost",
+  callback = function()
+    require('overseer').load_task_bundle(get_cwd_as_name(), {ignore_missing = true, autostart = false})
+  end
+})
+vim.api.nvim_create_autocmd("User", {
+  pattern = "PersistedSavePre",
+  callback = function()
+    require('overseer').save_task_bundle(get_cwd_as_name(), nil, {on_conflict = "overwrite"})
+  end
+})
+
 require 'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "zig", "typescript", "javascript", "json", "json5" },
   sync_install = false,
@@ -79,7 +96,7 @@ vim.cmd [[colorscheme dracula]]
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 vim.keymap.set('n', '<F12>', ':OverseerToggle bottom<CR>')
 vim.keymap.set('n', '<leader>qq', ':qa<CR>')
-vim.keymap.set('n', '<leader>cc', ':OverseerRun<cr>')
+vim.keymap.set('n', '<leader>cc', ':OverseerTaskAction<cr>')
 vim.keymap.set('n', '<leader>cs', ':OverseerRunCmd<cr>')
 vim.keymap.set("n", "<C-,>", ':BufferPrevious<CR>')
 vim.keymap.set("n", "<C-.>", ':BufferNext<cr>')
