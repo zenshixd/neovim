@@ -1,5 +1,14 @@
 return {
-  { "Mofiqul/dracula.nvim" },
+  {
+    "ellisonleao/gruvbox.nvim",
+    config = function()
+      require('gruvbox').setup{
+        contrast = 'hard',
+      }
+      vim.o.background = 'light'
+      vim.cmd [[colorscheme gruvbox]]
+    end
+  },
   {
     "pocco81/auto-save.nvim",
     opts = {
@@ -62,6 +71,13 @@ return {
   },
   {
     'stevearc/overseer.nvim',
-    config = true,
+    config = function()
+      local overseer = require('overseer')
+      overseer.setup{}
+      overseer.add_template_hook({ module = ".*" }, function(task_defn, util)
+        util.add_component(task_defn, { "unique" })
+        util.remove_component(task_defn, "on_complete_dispose")
+      end)
+    end,
   }
 }

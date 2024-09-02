@@ -13,7 +13,14 @@ return {
 		  end
 		})
     persisted.branch = function()
-      return vim.fn.system("jj branch list -r @ -r @- -T 'self.name()'")
+      if vim.loop.fs_stat(".jj") then
+        local branch = vim.fn.system("jj branch list -r @ -r @- -T 'self.name()'")
+        return vim.v.shell_error == 0 and branch or nil
+      end
+      if vim.loop.fs_stat(".git") then
+        local branch = vim.fn.systemlist("git branch --show-current")[1]
+        return vim.v.shell_error == 0 and branch or nil
+      end
     end
 
 		local function get_cwd_as_name()
