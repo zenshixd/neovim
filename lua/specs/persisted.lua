@@ -30,6 +30,12 @@ return {
 		vim.api.nvim_create_autocmd("User", {
 		  pattern = "PersistedLoadPost",
 		  callback = function()
+        local bufs = vim.api.nvim_list_bufs()
+        for _, buf in ipairs(bufs) do
+          if vim.api.nvim_buf_get_name(buf):match("^oil") ~= nil then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end
 		    overseer.load_task_bundle(get_cwd_as_name(), {ignore_missing = true, autostart = false})
 		  end
 		})

@@ -1,0 +1,11 @@
+--return {
+--  dir = "/Users/ownelek/Projects/telescope-jj.nvim",
+--  dependencies = {
+--    "nvim-telescope/telescope.nvim",
+--  },
+--  config = function()
+--    local telescope = require "telescope"
+--    telescope.load_extension "jj"
+--  end,
+--}
+return {}
