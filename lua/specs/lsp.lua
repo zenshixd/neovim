@@ -69,10 +69,12 @@ return {
           settings = { Lua = {} },
         }
       end,
-    }
-    lspconfig.angularls.setup{
-      root_dir = function(fname)
-        return lspconfig.util.root_pattern("angular.json")(fname) or lspconfig.util.find_package_json_ancestor(fname) or lspconfig.util.find_git_ancestor(fname)
+      ['angularls'] = function()
+        lspconfig.angularls.setup {
+          root_dir = function(fname)
+            return lspconfig.util.root_pattern("angular.json")(fname) or lspconfig.util.find_package_json_ancestor(fname) or lspconfig.util.find_git_ancestor(fname)
+          end,
+        }
       end,
     }
   end,
