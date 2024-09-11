@@ -46,9 +46,6 @@ return {
     }
     require("mason-lspconfig").setup_handlers {
       function(server_name)    -- default handler (optional)
-        if server_name == "ts_ls" then
-          server_name = "tsserver"
-        end
         lspconfig[server_name].setup {
           on_init = function()
             vim.g.zig_fmt_autosave = false
