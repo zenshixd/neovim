@@ -7,5 +7,21 @@ return {
     local builtin = require('telescope.builtin')
     local telescope = require('telescope')
     telescope.load_extension('persisted')
-  end
+  end,
+  opts = {
+    defaults = {
+      layout_strategy = "vertical",
+      layout_config = {
+        prompt_position = "top",
+        mirror = true,
+        width = 0.4,
+        height = 0.6,
+      },
+    },
+    pickers = {
+      oldfiles = {
+        cwd_only = true,
+      },
+    },
+  },
 }
