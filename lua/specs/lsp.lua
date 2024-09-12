@@ -4,27 +4,20 @@ return {
   dependencies = {
     { "nvimtools/none-ls.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
     { "nvimtools/none-ls-extras.nvim", dependencies = { "nvimtools/none-ls.nvim" } },
+    { 'echasnovski/mini.completion', version = '*', config = true },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
     { "lukas-reineke/lsp-format.nvim" },
+    { "nvimdev/lspsaga.nvim", config = true, event = "LspAttach" },
   },
-  init = function()
---    vim.api.nvim_set_keymap('i', '<Esc>', [[pumvisible() ? "\<C-e>" : "\<Esc>"]], { expr = true, silent = true })
---    vim.api.nvim_set_keymap('i', '<C-c>', [[pumvisible() ? "\<C-e><C-c>" : "\<C-c>"]], { expr = true, silent = true })
---    vim.api.nvim_set_keymap('i', '<BS>', [[pumvisible() ? "\<C-e><BS>" : "\<BS>"]], { expr = true, silent = true })
---    vim.api.nvim_set_keymap(
---      "i",
---      "<CR>",
---      [[pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>"]],
---      { expr = true, silent = true }
---    )
-  end,
   config = function()
     local null_ls = require('null-ls')
     local lsp_format = require('lsp-format')
     local lspconfig = require('lspconfig')
 
-    lsp_format.setup {}
+    lsp_format.setup {
+      sync = true,
+    }
     null_ls.setup({
       sources = {
         null_ls.builtins.formatting.prettierd,
@@ -42,7 +35,7 @@ return {
         "angularls",
         "lua_ls",
         "zls",
-      }
+      },
     }
     require("mason-lspconfig").setup_handlers {
       function(server_name)    -- default handler (optional)
@@ -50,6 +43,7 @@ return {
           on_init = function()
             vim.g.zig_fmt_autosave = false
           end,
+          on_attach = lsp_format.on_attach,
         }
       end,
       ["lua_ls"] = function()
