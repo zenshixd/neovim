@@ -45,4 +45,7 @@ vim.keymap.set('n', 'gi', '<cmd>Lspsaga finder imp<cr>')
 vim.keymap.set('n', 'gd', '<cmd>Lspsaga peek_definition<cr>')
 vim.keymap.set('n', 'gf', vim.lsp.buf.format)
 vim.keymap.set('n', 'gR', '<cmd>Lspsaga rename<cr>')
-vim.keymap.set('i', '<Tab>', 'pumvisible() ? "<C-n>" : "<Tab>"', { expr = true })
+
+local completion = require('supermaven-nvim.completion_preview')
+vim.keymap.set('i', '<Tab>', completion.on_accept_suggestion)
+
