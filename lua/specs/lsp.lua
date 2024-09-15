@@ -2,13 +2,23 @@ return {
   "neovim/nvim-lspconfig",
   lazy = false,
   dependencies = {
-    { "nvimtools/none-ls.nvim",           dependencies = { "nvim-lua/plenary.nvim" } },
-    { "nvimtools/none-ls-extras.nvim",    dependencies = { "nvimtools/none-ls.nvim" } },
-    { 'echasnovski/mini.completion',      version = '*',                              config = true },
+    { "nvim-lua/plenary.nvim" },
+    { "nvimtools/none-ls.nvim", },
+    { "nvimtools/none-ls-extras.nvim" },
+    { 'echasnovski/mini.completion',      version = "*", config = true },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
     { "lukas-reineke/lsp-format.nvim" },
-    { "nvimdev/lspsaga.nvim",             config = true,                              event = "LspAttach" },
+    {
+      "nvimdev/lspsaga.nvim",
+      event = "LspAttach",
+      config = true,
+      opts = {
+        symbol_in_winbar = {
+          enable = false,
+        },
+      },
+    },
   },
   config = function()
     local null_ls = require('null-ls')
@@ -69,7 +79,7 @@ return {
         lspconfig.angularls.setup {
           root_dir = function(fname)
             return lspconfig.util.root_pattern("angular.json")(fname) or lspconfig.util.find_package_json_ancestor(fname) or
-            lspconfig.util.find_git_ancestor(fname)
+                lspconfig.util.find_git_ancestor(fname)
           end,
         }
       end,

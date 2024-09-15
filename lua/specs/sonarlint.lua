@@ -1,5 +1,6 @@
 return {
   url = "https://gitlab.com/schrieveslaach/sonarlint.nvim.git",
+  event = "VeryLazy",
   config = function()
     require("sonarlint").setup({
     server = {
