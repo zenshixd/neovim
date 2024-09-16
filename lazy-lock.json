@@ -12,7 +12,7 @@
   "mini.completion": { "branch": "main", "commit": "6cd80770afa5da1d2a529a2b4b1fb18756d7866c" },
   "none-ls-extras.nvim": { "branch": "main", "commit": "ebb09961f1c0a377f9ed1685740cdf87b5cd39a8" },
   "none-ls.nvim": { "branch": "main", "commit": "9b98991e15dce8fc502993e23caac2528b8b667f" },
-  "nvim-autopairs": { "branch": "master", "commit": "fd2badc24e675f947162a16c124d395bde80dbd6" },
+  "nvim-autopairs": { "branch": "master", "commit": "ffc139f2a96640ca6c4d3dff9b95b7b9eace87ae" },
   "nvim-lspconfig": { "branch": "master", "commit": "056f569f71e4b726323b799b9cfacc53653bceb3" },
   "nvim-treesitter": { "branch": "master", "commit": "f197a15b0d1e8d555263af20add51450e5aaa1f0" },
   "nvim-ufo": { "branch": "main", "commit": "a5390706f510d39951dd581f6d2a972741b3fa26" },
