@@ -14,7 +14,7 @@ return {
       layout_config = {
         prompt_position = "top",
         mirror = true,
-        width = 0.4,
+        width = 0.8,
         height = 0.6,
       },
     },
