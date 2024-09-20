@@ -1,5 +1,6 @@
 return {
   'stevearc/overseer.nvim',
+  branch = 'master',
   config = function()
     local overseer = require('overseer')
     overseer.setup {
@@ -9,12 +10,12 @@ return {
       },
       component_aliases = {
         default = {
-          { "display_duration",    detail_level = 2 },
+          { "display_duration", detail_level = 2 },
           "on_output_summarize",
           "on_exit_set_status",
           "on_complete_notify",
-          { "on_complete_dispose", require_view = { "SUCCESS", "FAILURE" } },
-          "unique"
+          "unique",
+          { "open_output",      on_start = "always", focus = true, direction = "float" },
         },
       }
     }

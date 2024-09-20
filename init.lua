@@ -23,7 +23,7 @@ vim.keymap.set('n', '<leader>cc', ':OverseerRun<cr>', { silent = true })
 vim.keymap.set("n", "<A-,>", ':BufferPrevious<CR>', { silent = true })
 vim.keymap.set("n", "<A-.>", ':BufferNext<cr>', { silent = true })
 vim.keymap.set('n', '<C-c>', ':BufferClose<cr>', { silent = true })
-vim.keymap.set('n', '<leader>dv', ":DiffviewOpen<cr>", { silent = true })
+vim.keymap.set('n', '<leader>dv', require('mini.diff').toggle_overlay)
 
 local ufo = require('ufo')
 vim.keymap.set('n', 'zR', ufo.openAllFolds)
@@ -38,13 +38,13 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {});
 vim.keymap.set('n', '<leader>fs', telescope.extensions.persisted.persisted, {})
 vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<cr>', { silent = true })
-vim.keymap.set('n', 'ga', '<cmd>Lspsaga code_action<cr>', { silent = true })
-vim.keymap.set('n', 'gr', '<cmd>Lspsaga finder ref<cr>', { silent = true })
+vim.keymap.set('n', 'ga', vim.lsp.buf.code_action)
+vim.keymap.set('n', 'gr', builtin.lsp_references)
 vim.keymap.set('n', 'gt', '<cmd>Lspsaga peek_type_definition<cr>', { silent = true })
 vim.keymap.set('n', 'gi', '<cmd>Lspsaga finder imp<cr>', { silent = true })
 vim.keymap.set('n', 'gd', '<cmd>Lspsaga peek_definition<cr>', { silent = true })
 vim.keymap.set('n', 'gf', vim.lsp.buf.format)
-vim.keymap.set('n', 'gR', '<cmd>Lspsaga rename<cr>', { silent = true })
+vim.keymap.set('n', 'gR', vim.lsp.buf.rename)
 
 local oil = require("oil")
 vim.keymap.set('n', '<leader>e', oil.open_float)
@@ -77,7 +77,7 @@ vim.api.nvim_create_autocmd("FileType", {
       local STATUS = require('overseer.constants').STATUS
       local sb = sidebar.get_or_create()
 
-      local task = sb:_get_task_from_line()
+      local task = sb:get_task_from_line()
 
       if not task then
         vim.notify("No task found", vim.log.levels.WARN)

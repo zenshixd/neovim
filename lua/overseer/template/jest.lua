@@ -24,6 +24,11 @@ return {
     }
     local jest_cwd = vim.fs.root(0, jest_configs) or vim.fs.root(0, "package.json")
     local config_path = vim.fs.find(jest_configs, { path = jest_cwd })
+
+    if (#config_path == 0) then
+      cb({})
+      return
+    end
     local test_file = vim.fn.expand('%:t')
 
     local tasks = {}
@@ -40,7 +45,7 @@ return {
               args = { '--config=' .. vim.fs.basename(config_path[1]), '--testPathPattern=' .. test_file, '--testNamePattern=' .. test },
               name = test_file .. ' -> ' .. test,
               cwd = jest_cwd,
-              components = { "default" },
+              components = { "default", "on_complete_dispose" },
             }
           end,
         })
@@ -57,7 +62,7 @@ return {
           args = { '--config=' .. vim.fs.basename(config_path[1]), '--testPathPattern=' .. test_file },
           name = test_file,
           cwd = jest_cwd,
-          components = { "default" },
+          components = { "default", "on_complete_dispose" },
         }
       end,
     })

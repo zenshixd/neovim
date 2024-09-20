@@ -5,7 +5,6 @@ return {
   { 'echasnovski/mini.completion',      version = "*", config = true },
   { "williamboman/mason.nvim" },
   { "williamboman/mason-lspconfig.nvim" },
-  { "lukas-reineke/lsp-format.nvim" },
   {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
@@ -14,21 +13,21 @@ return {
       symbol_in_winbar = {
         enable = false,
       },
+      lightbulb = {
+        enable = true,
+        sign = true,
+        sign_priority = 40,
+        virtual_text = false,
+      },
     },
   },
   {
     "neovim/nvim-lspconfig",
     lazy = false,
-    dependencies = {
-    },
     config = function()
       local null_ls = require('null-ls')
-      local lsp_format = require('lsp-format')
       local lspconfig = require('lspconfig')
 
-      lsp_format.setup {
-        sync = true,
-      }
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.prettierd,
@@ -37,9 +36,6 @@ return {
           require("none-ls.code_actions.eslint_d"),
           require("none-ls.formatting.eslint_d"),
         },
-        on_attach = function(client, bufnr)
-          lsp_format.on_attach(client, bufnr)
-        end
       })
       require 'mason'.setup()
       require("mason-lspconfig").setup {
@@ -51,12 +47,19 @@ return {
         },
       }
       require("mason-lspconfig").setup_handlers {
-        function(server_name) -- default handler (optional)
+        function(server_name)
           lspconfig[server_name].setup {
             on_init = function()
               vim.g.zig_fmt_autosave = false
             end,
-            on_attach = lsp_format.on_attach,
+          }
+        end,
+        ["ts_ls"] = function()
+          lspconfig.ts_ls.setup {
+            on_attach = function(client)
+              client.server_capabilities.documentFormattingProvider = nil
+              client.server_capabilities.documentRangeFormattingProvider = nil
+            end,
           }
         end,
         ["lua_ls"] = function()
@@ -83,16 +86,18 @@ return {
                   lspconfig.util.find_package_json_ancestor(fname) or
                   lspconfig.util.find_git_ancestor(fname)
             end,
+            on_attach = function(client, bufnr)
+              client.server_capabilities.codeActionProvider = nil
+              client.server_capabilities.documentFormattingProvider = nil
+              client.server_capabilities.documentRangeFormattingProvider = nil
+            end,
           }
         end,
       }
 
-      vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client ~= nil and client.name == "angularls" then
-            client.server_capabilities.codeActionProvider = nil
-          end
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        callback = function()
+          vim.lsp.buf.format()
         end,
       })
     end,

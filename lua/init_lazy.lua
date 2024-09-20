@@ -19,6 +19,7 @@ require("lazy").setup {
 	spec = "specs",
   defaults = {
     version = "*",
+    pin = false,
   },
   checker = { enabled = true, notify = false },
 }
