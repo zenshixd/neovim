@@ -1,10 +1,10 @@
 return {
-  "ellisonleao/gruvbox.nvim",
-  config = function()
-    require('gruvbox').setup{
-      contrast = 'hard',
-    }
-    vim.o.background = 'light'
-    vim.cmd [[colorscheme gruvbox]]
-  end
+  "f4z3r/gruvbox-material.nvim",
+  name = "gruvbox-material",
+  version = false,
+  lazy = false,
+  priority = 1000,
+  opts = {
+    contrast = "hard",
+  }
 }

@@ -1,3 +1,4 @@
+vim.opt.background = 'light'
 require('init_lazy')
 
 vim.opt.tabstop = 2
