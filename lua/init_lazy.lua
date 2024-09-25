@@ -16,7 +16,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup {
-	spec = "specs",
+  spec = "specs",
   defaults = {
     version = "*",
     pin = false,
