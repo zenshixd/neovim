@@ -1,5 +1,5 @@
-vim.opt.background = 'light'
 require('init_lazy')
+vim.opt.background = 'light'
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
