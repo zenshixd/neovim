@@ -4,7 +4,6 @@ return {
   version = false,
   lazy = false,
   priority = 1000,
-  branch = "feat/config-cache",
   opts = {
     contrast = "hard",
   }
