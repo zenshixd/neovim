@@ -3,6 +3,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     version = false,
+    event = "VeryLazy",
     config = function()
       require 'nvim-treesitter.configs'.setup {
         ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "zig", "typescript", "javascript", "json", "json5" },
@@ -20,7 +21,7 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    event = "ModeChanged",
+    event = "VeryLazy",
     config = function()
       require("nvim-treesitter.configs").setup {
         textobjects = {

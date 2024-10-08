@@ -14,9 +14,18 @@ return {
     })
     persisted.branch = function()
       if vim.loop.fs_stat(".jj") then
-        local branch = vim.fn.system("jj bookmark list -r @ -r @- -T 'self.name()'")
-        return vim.v.shell_error == 0 and branch or nil
+        local branch = vim.fn.system("jj bookmark list -r ::@ -T 'self.name() ++ \"\n\"'")
+        if vim.v.shell_error == 0 then
+          local first_branch = vim.split(branch, "\n")[1]
+          if first_branch ~= nil then
+            return first_branch
+          end
+        end
+
+        vim.notify("No existing branch to load.")
+        return nil
       end
+
       if vim.loop.fs_stat(".git") then
         local branch = vim.fn.systemlist("git branch --show-current")[1]
         return vim.v.shell_error == 0 and branch or nil

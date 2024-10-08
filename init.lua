@@ -12,9 +12,10 @@ vim.opt.foldmethod = 'manual'
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.sessionoptions = 'buffers,curdir,folds,winsize,winpos'
+vim.opt.autowriteall = true
 vim.g.zig_fmt_autosave = false
-vim.o.hidden = false
-vim.o.omnifunc = 'v:lua.vim.lsp.omnifunc'
+vim.opt.hidden = false
+vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
 
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
 vim.keymap.set('n', '<F12>', ':OverseerOpen right<CR>', { silent = true })
@@ -38,12 +39,11 @@ vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {});
 vim.keymap.set('n', '<leader>fs', telescope.extensions.persisted.persisted, {})
-vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<cr>', { silent = true })
 vim.keymap.set('n', 'ga', vim.lsp.buf.code_action)
 vim.keymap.set('n', 'gr', builtin.lsp_references)
-vim.keymap.set('n', 'gt', '<cmd>Lspsaga peek_type_definition<cr>', { silent = true })
-vim.keymap.set('n', 'gi', '<cmd>Lspsaga finder imp<cr>', { silent = true })
-vim.keymap.set('n', 'gd', '<cmd>Lspsaga peek_definition<cr>', { silent = true })
+vim.keymap.set('n', 'gt', builtin.lsp_type_definitions)
+vim.keymap.set('n', 'gi', builtin.lsp_implementations)
+vim.keymap.set('n', 'gd', builtin.lsp_definitions)
 vim.keymap.set('n', 'gf', vim.lsp.buf.format)
 vim.keymap.set('n', 'gR', vim.lsp.buf.rename)
 
