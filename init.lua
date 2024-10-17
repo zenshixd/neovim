@@ -19,7 +19,6 @@ vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
 
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
 vim.keymap.set('n', '<F12>', ':OverseerOpen right<CR>', { silent = true })
-vim.keymap.set('n', '<leader>qq', ':qa<CR>', { silent = true })
 vim.keymap.set('n', '<leader>ca', ':OverseerTaskAction<cr>', { silent = true })
 vim.keymap.set('n', '<leader>cc', ':OverseerRun<cr>', { silent = true })
 vim.keymap.set("n", "<A-,>", ':BufferPrevious<CR>', { silent = true })
@@ -100,5 +99,13 @@ vim.api.nvim_create_autocmd("FileType", {
       sb:run_action()
     end, { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<C-c>', '<cmd>OverseerQuickAction dispose<cr>', { buffer = event.buf, silent = true })
+  end
+})
+
+vim.api.nvim_create_autocmd("WinLeave", {
+  callback = function()
+    if vim.bo.ft == "TelescopePrompt" and vim.fn.mode() == "i" then
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "i", true)
+    end
   end
 })

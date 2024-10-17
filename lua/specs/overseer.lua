@@ -4,6 +4,7 @@ return {
   config = function()
     local overseer = require('overseer')
     overseer.setup {
+      dap = true,
       templates = { 'builtin', 'jest' },
       task_list = {
         min_width = 60,
