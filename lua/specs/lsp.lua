@@ -31,8 +31,8 @@ return {
       null_ls.setup({
         sources = {
           null_ls.builtins.formatting.prettierd.with({
-            name = "prettierd",
-            command = "prettierd",
+            name = "prettierxd",
+            command = "prettierxd",
           }),
           null_ls.builtins.completion.spell,
           require("none-ls.diagnostics.eslint_d"),
