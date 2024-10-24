@@ -1,5 +1,5 @@
 require('init_lazy')
-vim.opt.background = 'light'
+vim.cmd [[colorscheme onenord]]
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -98,7 +98,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
       sb:run_action()
     end, { buffer = event.buf, silent = true })
-    vim.keymap.set('n', '<C-c>', '<cmd>OverseerQuickAction dispose<cr>', { buffer = event.buf, silent = true })
+    vim.keymap.set('n', '<C-c>', '<cmd>OverseerQuickAction dispose<cr>',
+      { buffer = event.buf, silent = true })
   end
 })
 

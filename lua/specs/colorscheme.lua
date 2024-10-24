@@ -1,10 +1,4 @@
 return {
-  "f4z3r/gruvbox-material.nvim",
-  name = "gruvbox-material",
-  version = false,
-  lazy = false,
+  "rmehri01/onenord.nvim",
   priority = 1000,
-  opts = {
-    contrast = "hard",
-  }
 }
