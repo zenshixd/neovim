@@ -39,6 +39,7 @@ return {
       }
 
       lspconfig.angularls.setup {
+        autostart = false,
         on_init = function(client)
           client.server_capabilities.codeActionProvider = nil
           client.server_capabilities.documentFormattingProvider = nil
@@ -69,16 +70,16 @@ return {
           }),
           null_ls.builtins.completion.spell,
           require("none-ls.diagnostics.eslint_d").with({
-            name = "eslintxd",
-            command = "eslintxd",
+            name = "eslint_d",
+            command = "eslint_d",
           }),
           require("none-ls.code_actions.eslint_d").with({
-            name = "eslintxd",
-            command = "eslintxd",
+            name = "eslint_d",
+            command = "eslint_d",
           }),
           require("none-ls.formatting.eslint_d").with({
-            name = "eslintxd",
-            command = "eslintxd",
+            name = "eslint_d",
+            command = "eslint_d",
           }),
         },
       })

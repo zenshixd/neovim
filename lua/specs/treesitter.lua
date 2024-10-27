@@ -6,7 +6,7 @@ return {
     event = "VeryLazy",
     config = function()
       require 'nvim-treesitter.configs'.setup {
-        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "zig", "typescript", "javascript", "json", "json5" },
+        ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "zig", "typescript", "javascript", "json", "json5", "diff" },
         sync_install = false,
         auto_install = true,
         highlight = {
@@ -27,7 +27,7 @@ return {
         textobjects = {
           select = {
             enable = true,
-            lookahead = true,
+            lookahead = false,
             keymaps = {
               ["af"] = "@function.outer",
               ["if"] = "@function.inner",
@@ -39,6 +39,43 @@ return {
               ["ib"] = "@block.inner",
               ["av"] = "@assignment.outer",
               ["iv"] = "@assignment.inner",
+              ["as"] = "@statement.outer"
+            },
+          },
+          move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              ["]f"] = "@function.outer",
+              ["]c"] = "@class.outer",
+              ["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
+              ["]b"] = "@block.outer",
+              ["]s"] = "@statement.outer",
+              ["]h"] = "@diff.hunk",
+            },
+            goto_next_end = {
+              ["]F"] = "@function.outer",
+              ["]C"] = "@class.outer",
+              ["]Z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
+              ["]B"] = "@block.outer",
+              ["]S"] = "@statement.outer",
+              ["]H"] = "@diff.hunk",
+            },
+            goto_previous_start = {
+              ["[f"] = "@function.outer",
+              ["[c"] = "@class.outer",
+              ["[z"] = { query = "@fold", query_group = "folds", desc = "Previous fold" },
+              ["[b"] = "@block.outer",
+              ["[s"] = "@statement.outer",
+              ["[h"] = "@diff.hunk",
+            },
+            goto_previous_end = {
+              ["[F"] = "@function.outer",
+              ["[C"] = "@class.outer",
+              ["[Z"] = { query = "@fold", query_group = "folds", desc = "Previous fold" },
+              ["[B"] = "@block.outer",
+              ["[S"] = "@statement.outer",
+              ["[H"] = "@diff.hunk",
             },
           },
         },
