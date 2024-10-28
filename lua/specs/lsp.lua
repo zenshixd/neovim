@@ -5,16 +5,6 @@ return {
   { 'echasnovski/mini.completion',  version = "*", config = true },
   { "williamboman/mason.nvim" },
   {
-    "pmizio/typescript-tools.nvim",
-    opts = {
-      on_init = function(client)
-        client.server_capabilities.documentFormattingProvider = nil
-        client.server_capabilities.documentRangeFormattingProvider = nil
-      end,
-      expose_as_code_action = "all",
-    }
-  },
-  {
     "neovim/nvim-lspconfig",
     lazy = false,
     config = function()
@@ -22,18 +12,15 @@ return {
       local null_ls = require 'null-ls'
       local lspconfig = require 'lspconfig'
 
-      --lspconfig.ts_ls.setup {
-      --  init_options = {
-      --    hostInfo = "neovim",
-      --    preferences = {
-      --      includeCompletionsForModuleExports = false,
-      --    }
-      --  },
-      --  on_init = function(client)
-      --    client.server_capabilities.documentFormattingProvider = nil
-      --    client.server_capabilities.documentRangeFormattingProvider = nil
-      --  end,
-      --}
+      lspconfig.ts_ls.setup {
+        init_options = {
+          hostInfo = "neovim",
+        },
+        on_init = function(client)
+          client.server_capabilities.documentFormattingProvider = nil
+          client.server_capabilities.documentRangeFormattingProvider = nil
+        end,
+      }
 
       lspconfig.lua_ls.setup {
         on_init = function(client)
