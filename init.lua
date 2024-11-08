@@ -19,6 +19,7 @@ vim.opt.autowriteall = true
 vim.g.zig_fmt_autosave = false
 vim.opt.hidden = false
 vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
+vim.o.undofile = true
 
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
 vim.keymap.set('n', '<F12>', ':OverseerOpen bottom<CR>', { silent = true })
