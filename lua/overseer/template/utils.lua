@@ -20,6 +20,8 @@ function M.find_nearest_test(filetype, test_query)
           end
         end
         local name = ts.get_node_text(capture_node, 0)
+        name = string.gsub(name, "${.*}", "(.*)")
+        name = string.sub(name, 2, -2)
         table.insert(result, 1, name)
       end
       curnode = curnode:parent()

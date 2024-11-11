@@ -64,6 +64,13 @@ local oil = require("oil")
 vim.keymap.set('n', '<leader>e', oil.open_float)
 
 vim.api.nvim_create_autocmd("FileType", {
+  pattern = "oil",
+  callback = function(event)
+    vim.keymap.set('n', 'q', oil.close, { buffer = event.buf, silent = true })
+  end
+})
+
+vim.api.nvim_create_autocmd("FileType", {
   pattern = "qf",
   callback = function(event)
     vim.keymap.set('n', ',', '<cmd>cprevious<cr>zz<cmd>wincmd p<cr>', { buffer = event.buf, silent = true })
@@ -74,7 +81,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "OverseerList",
   callback = function(event)
-    vim.keymap.set('n', '<Esc>', '<C-w><C-w>', { buffer = event.buf, silent = true })
+    vim.keymap.set('n', '<Esc>', '<C-w>p', { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<F12>', '<cmd>OverseerClose<cr>', { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<cr>', function()
       local action_util = require('overseer.action_util')
@@ -115,31 +122,3 @@ vim.api.nvim_create_autocmd("WinLeave", {
     end
   end
 })
-vim.api.nvim_create_user_command("Enext", function(opts)
-  local fullname = vim.fn.expand("%")
-  local dir = vim.fs.dirname(fullname)
-  local scanner = vim.uv.fs_scandir(dir)
-  local name = vim.fs.basename(fullname)
-
-  local next_entry = nil
-  local pick_next = false
-  while true do
-    local entry = vim.uv.fs_scandir_next(scanner)
-    if entry == nil then
-      break
-    end
-
-    if pick_next then
-      next_entry = entry;
-      break
-    end
-
-    if entry == name then
-      pick_next = true
-    end
-  end
-
-  if next_entry ~= nil then
-    vim.cmd("e " .. next_entry)
-  end
-end, {})

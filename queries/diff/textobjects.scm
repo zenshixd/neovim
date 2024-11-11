@@ -1,1 +1,1 @@
-(hunk) @diff.hunk
+(location) @diff.hunk

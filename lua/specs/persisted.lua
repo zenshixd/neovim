@@ -14,22 +14,31 @@ return {
     })
     persisted.branch = function()
       if vim.loop.fs_stat(".jj") then
-        local branch = vim.fn.system("jj bookmark list -r ::@ -T 'self.name() ++ \"\n\"'")
-        if vim.v.shell_error == 0 then
-          local first_branch = vim.split(branch, "\n")[1]
-          if first_branch ~= nil then
-            return first_branch
-          end
+        vim.notify("Using jj command")
+        local branch = vim.fn.system([[jj bookmark list -r ::@ -T 'self.name() ++ "\n"' --quiet --ignore-working-copy]])
+        if vim.v.shell_error ~= 0 then
+          vim.notify("Error getting branch", vim.log.levels.ERROR)
+          vim.notify(branch, vim.log.levels.ERROR)
+          return nil
         end
 
-        vim.notify("No existing branch to load.")
-        return nil
+        local first_branch = vim.split(branch, "\n")[1]
+        if first_branch == nil then
+          vim.notify("No existing branch to load.")
+          return nil
+        end
+
+        return first_branch
       end
 
       if vim.loop.fs_stat(".git") then
+        vim.notify("Using git command")
         local branch = vim.fn.systemlist("git branch --show-current")[1]
         return vim.v.shell_error == 0 and branch or nil
       end
+
+      vim.notify("Not a repository")
+      return nil
     end
 
     local function get_cwd_as_name()

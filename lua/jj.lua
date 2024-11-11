@@ -1,6 +1,7 @@
-local bookmarks_list_template = [[jj bookmark list -T "self.name() ++ \"\n\""]]
+local bookmarks_list_template =
+[[jj bookmark list --ignore-working-copy -T "concat(self.name(), surround('@', '', self.remote()), \"\n\")"]]
 local remote_bookmarks_list_template =
-[[jj bookmark list -a -T "if(self.remote().starts_with('origin'), self.name() ++ \"\n\")"]]
+[[jj bookmark list --ignore-working-copy -a -T "if(self.remote().starts_with('origin'), self.name() ++ \"\n\")"]]
 local revisions_list_template =
 [[jj log --no-graph -T "separate(' | ', self.change_id().shortest(3), self.local_bookmarks().map(|b| b.name().substr(0, 32)).join(', '), if(self.description(), self.description().first_line(), '(no description set)') ++ \"\n\")"]]
 
@@ -18,7 +19,8 @@ vim.api.nvim_create_user_command("JJ", function(opts)
 end, {});
 
 vim.api.nvim_create_user_command("JJdescribe", function()
-  local current_description = vim.split(vim.fn.system([[jj log -r @ --no-graph -T "self.description()"]]), "\n")
+  local current_description = vim.split(
+    vim.fn.system([[jj log --ignore-working-copy -r @ --no-graph -T "self.description()"]]), "\n")
   local buf = vim.api.nvim_create_buf(true, false)
   vim.api.nvim_buf_set_name(buf, "[jj describe]")
   vim.api.nvim_win_set_buf(0, buf)
@@ -29,7 +31,7 @@ vim.api.nvim_create_user_command("JJdescribe", function()
     buffer = buf,
     callback = function()
       local content = vim.api.nvim_buf_get_text(buf, 0, 0, -1, -1, {})
-      local result = vim.fn.system([[jj describe --stdin]], content)
+      local result = vim.fn.system([[jj describe --ignore-working-copy --stdin]], content)
 
       if vim.v.shell_error ~= 0 then
         vim.notify("Error saving revision description", vim.log.levels.ERROR)

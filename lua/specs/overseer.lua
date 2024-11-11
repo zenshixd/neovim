@@ -5,10 +5,7 @@ return {
     local overseer = require('overseer')
     overseer.setup {
       dap = true,
-      templates = { 'builtin', 'jest' },
-      task_list = {
-        min_width = 60,
-      },
+      templates = { 'builtin', 'jest', "zig" },
       component_aliases = {
         default = {
           { "display_duration", detail_level = 2 },

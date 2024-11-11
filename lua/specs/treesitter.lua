@@ -27,7 +27,7 @@ return {
         textobjects = {
           select = {
             enable = true,
-            lookahead = false,
+            lookahead = true,
             keymaps = {
               ["af"] = "@function.outer",
               ["if"] = "@function.inner",
@@ -39,6 +39,8 @@ return {
               ["ib"] = "@block.inner",
               ["av"] = "@assignment.outer",
               ["iv"] = "@assignment.inner",
+              ["al"] = "@assignment.lhs",
+              ["ar"] = "@assignment.rhs",
               ["as"] = "@statement.outer"
             },
           },

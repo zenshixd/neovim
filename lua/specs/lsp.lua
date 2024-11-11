@@ -38,6 +38,9 @@ return {
         settings = { Lua = {} },
       }
 
+      lspconfig.jsonls.setup {}
+      lspconfig.eslint.setup {}
+
       lspconfig.angularls.setup {
         autostart = false,
         on_init = function(client)
@@ -64,25 +67,12 @@ return {
 
       null_ls.setup({
         sources = {
-          null_ls.builtins.formatting.prettierd.with({
-            name = "prettierxd",
-            command = "prettierxd",
-          }),
+          null_ls.builtins.formatting.prettierd,
           null_ls.builtins.completion.spell,
-          require("none-ls.diagnostics.eslint_d").with({
-            name = "eslint_d",
-            command = "eslint_d",
-          }),
-          require("none-ls.code_actions.eslint_d").with({
-            name = "eslint_d",
-            command = "eslint_d",
-          }),
-          require("none-ls.formatting.eslint_d").with({
-            name = "eslint_d",
-            command = "eslint_d",
-          }),
         },
       })
+
+
       vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function()
           vim.lsp.buf.format()
