@@ -6,17 +6,20 @@ local revisions_list_template =
 [[jj log --no-graph -T "separate(' | ', self.change_id().shortest(3), self.local_bookmarks().map(|b| b.name().substr(0, 32)).join(', '), if(self.description(), self.description().first_line(), '(no description set)') ++ \"\n\")"]]
 
 vim.api.nvim_create_user_command("JJ", function(opts)
-  local status = vim.fn.system(
-    [[jj st]])
+  local command = "jj"
+  if opts.args ~= '' then command = command .. " " .. opts.args end
+  local result = vim.fn.system(command)
 
   if vim.v.shell_error ~= 0 then
-    vim.notify("Error getting status", vim.log.levels.ERROR)
-    vim.notify(status, vim.log.levels.ERROR)
+    vim.notify("Error executing '" .. command .. "'", vim.log.levels.ERROR)
+    vim.notify(result, vim.log.levels.ERROR)
     return
   end
 
-  vim.notify(status, vim.log.levels.INFO)
-end, {});
+  vim.notify(result, vim.log.levels.INFO)
+end, {
+  nargs = '*'
+});
 
 vim.api.nvim_create_user_command("JJdescribe", function()
   local current_description = vim.split(
@@ -159,7 +162,11 @@ vim.api.nvim_create_user_command("JJedit", function(opts)
 end, {});
 
 vim.api.nvim_create_user_command("JJdiff", function(opts)
-  local diff = vim.fn.system([[jj diff --no-pager --git]])
+  local revision = opts.fargs[1]
+  if revision == nil then
+    revision = '@'
+  end
+  local diff = vim.fn.system("jj diff -r " .. revision .. " --no-pager --git")
   local buf = vim.api.nvim_create_buf(true, true)
   vim.api.nvim_buf_set_name(buf, "[jj diff]")
   vim.api.nvim_win_set_buf(0, buf)
@@ -173,4 +180,6 @@ vim.api.nvim_create_user_command("JJdiff", function(opts)
       end)
     end
   })
-end, {})
+end, {
+  nargs = '*',
+})
