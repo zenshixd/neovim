@@ -34,7 +34,7 @@ vim.api.nvim_create_user_command("JJdescribe", function()
     buffer = buf,
     callback = function()
       local content = vim.api.nvim_buf_get_text(buf, 0, 0, -1, -1, {})
-      local result = vim.fn.system([[jj describe --ignore-working-copy --stdin]], content)
+      local result = vim.fn.system("jj describe --ignore-working-copy --stdin", content)
 
       if vim.v.shell_error ~= 0 then
         vim.notify("Error saving revision description", vim.log.levels.ERROR)
@@ -183,3 +183,11 @@ vim.api.nvim_create_user_command("JJdiff", function(opts)
 end, {
   nargs = '*',
 })
+
+vim.api.nvim_create_user_command("JJpush", function()
+  if vim.uv.fs_stat('./.husky/pre-commit') then
+    vim.cmd("!./.husky/pre-commit")
+  end
+
+  vim.cmd("!jj gp")
+end, {})
