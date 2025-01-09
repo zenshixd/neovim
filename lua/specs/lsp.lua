@@ -12,10 +12,7 @@ return {
       local null_ls = require 'null-ls'
       local lspconfig = require 'lspconfig'
 
-      lspconfig.ts_ls.setup {
-        init_options = {
-          hostInfo = "neovim",
-        },
+      lspconfig.vtsls.setup {
         on_init = function(client)
           client.server_capabilities.documentFormattingProvider = nil
           client.server_capabilities.documentRangeFormattingProvider = nil

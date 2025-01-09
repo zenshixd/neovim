@@ -21,10 +21,17 @@ vim.opt.hidden = false
 vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
 vim.o.undofile = true
 
+vim.keymap.set({ 'i', 'n', 'v' }, '<Home>', function()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  vim.cmd [[normal! ^]]
+  local new_cursor = vim.api.nvim_win_get_cursor(0)
+  if cursor[2] == new_cursor[2] then
+    vim.cmd [[normal! 0]]
+  end
+end)
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
 vim.keymap.set('n', '<F12>', ':OverseerOpen bottom<CR>', { silent = true })
-vim.keymap.set('n', '<leader>ca', ':OverseerTaskAction<cr>', { silent = true })
-vim.keymap.set('n', '<leader>cc', ':OverseerRun<cr>', { silent = true })
+vim.keymap.set('n', '<leader>c', require('overseer_util').OverseerRun)
 vim.keymap.set("n", "<A-j>", ':BufferPrevious<CR>', { silent = true })
 vim.keymap.set("n", "<A-k>", ':BufferNext<cr>', { silent = true })
 vim.keymap.set('n', '<C-c>', ':BufferClose<cr>', { silent = true })
