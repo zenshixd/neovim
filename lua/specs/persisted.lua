@@ -1,3 +1,5 @@
+local get_branch_name_template = [[jj bookmark list -r ::@ -T "self.name() ++ \"\n\"" --quiet --ignore-working-copy]]
+
 return {
   "olimorris/persisted.nvim",
   lazy = false,
@@ -15,7 +17,7 @@ return {
     persisted.branch = function()
       if vim.loop.fs_stat(".jj") then
         vim.notify("Using jj command")
-        local branch = vim.fn.system([[jj bookmark list -r ::@ -T 'self.name() ++ "\n"' --quiet --ignore-working-copy]])
+        local branch = vim.fn.system(get_branch_name_template)
         if vim.v.shell_error ~= 0 then
           vim.notify("Error getting branch", vim.log.levels.ERROR)
           vim.notify(branch, vim.log.levels.ERROR)
