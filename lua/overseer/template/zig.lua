@@ -1,6 +1,6 @@
 local overseer = require('overseer')
 return {
-  generator = function(search, cb)
+  generator = function(_, cb)
     local test_filename = vim.fn.expand('%:t:r')
     local test_filter = test_filename .. ".test"
 

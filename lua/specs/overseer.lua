@@ -8,7 +8,7 @@ return {
         min_height = 16,
       },
       dap = true,
-      templates = { 'npm', 'jest', "zig" },
+      templates = { 'shell', 'npm', 'jest', "zig" },
       actions = {
         debug = require('overseer.actions.debug'),
         watch = false,

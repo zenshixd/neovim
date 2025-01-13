@@ -2,12 +2,25 @@ local M = {}
 
 function M.OverseerRun()
   local commands = require('overseer.commands')
-  commands.run_template({ autostart = false }, function(task)
-    M.OverseerSelectAction(task)
+  local template = require('overseer.template')
+  template.list({
+    dir = vim.fn.getcwd(),
+    filetype = vim.bo.filetype,
+  }, function(templates)
+    local templ_params = { autostart = false }
+    if #templates == 0 then
+      templ_params = { name = "shell", params = {} }
+    end
+
+    commands.run_template(templ_params, M.OverseerSelectAction)
   end)
 end
 
 function M.OverseerSelectAction(task)
+  if task == nil then
+    return
+  end
+
   local overseer = require('overseer')
   local action_util = require('overseer.action_util')
   local actions = {

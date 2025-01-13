@@ -32,8 +32,8 @@ end)
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
 vim.keymap.set('n', '<F12>', ':OverseerOpen bottom<CR>', { silent = true })
 vim.keymap.set('n', '<leader>c', require('overseer_util').OverseerRun)
-vim.keymap.set("n", "<A-j>", ':BufferPrevious<CR>', { silent = true })
-vim.keymap.set("n", "<A-k>", ':BufferNext<cr>', { silent = true })
+vim.keymap.set("n", "<A-;>", ':BufferPrevious<CR>', { silent = true })
+vim.keymap.set("n", "<A-'>", ':BufferNext<cr>', { silent = true })
 vim.keymap.set('n', '<C-c>', ':BufferClose<cr>', { silent = true })
 vim.keymap.set('n', '<leader>dv', require('mini.diff').toggle_overlay)
 vim.keymap.set('n', '<leader>qf', function() vim.diagnostic.setqflist() end)
@@ -90,6 +90,8 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function(event)
     vim.keymap.set('n', '<Esc>', '<C-w>p', { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<F12>', '<cmd>OverseerClose<cr>', { buffer = event.buf, silent = true })
+    vim.keymap.set('n', 'a', '<C-w><C-w>a', { buffer = event.buf, silent = true })
+    vim.keymap.set('n', 'G', '<C-w><C-w>G<C-w>p', { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<cr>', function()
       local action_util = require('overseer.action_util')
       local sidebar = require('overseer.task_list.sidebar')
@@ -103,12 +105,10 @@ vim.api.nvim_create_autocmd("FileType", {
         return
       end
 
-      if task.status == STATUS.PENDING then
-        action_util.run_task_action(task, "start")
-      elseif task.status == STATUS.RUNNING then
+      if task.status == STATUS.RUNNING then
         action_util.run_task_action(task, "stop")
       else
-        action_util.run_task_action(task, "restart")
+        require('overseer_util').OverseerSelectAction(task)
       end
     end, { buffer = event.buf })
     vim.keymap.set('n', '<C-Enter>', function()
