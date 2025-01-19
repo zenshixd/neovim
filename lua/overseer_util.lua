@@ -27,7 +27,7 @@ function M.OverseerSelectAction(task)
     {
       name = "run",
       run = function()
-        if task.status == overseer.constants.STATUS.SUCCESS or task.status == overseer.constants.STATUS.FAILURE then
+        if task.status == overseer.constants.STATUS.SUCCESS or task.status == overseer.constants.STATUS.FAILURE or task.status == overseer.constants.STATUS.CANCELED then
           task:restart()
         else
           task:start()

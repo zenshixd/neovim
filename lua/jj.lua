@@ -75,8 +75,11 @@ vim.api.nvim_create_user_command("JJbl", function(opts)
         prompt = "Select action: ",
       }, function(action)
         if action ~= nil then
+          vim.cmd('SessionSave')
           local result = vim.fn.system(action .. " " .. branch)
           vim.notify(result, vim.log.levels.INFO)
+          vim.cmd('SessionLoad')
+          vim.cmd('edit')
         end
       end)
     end
@@ -134,9 +137,12 @@ vim.api.nvim_create_user_command("JJnew", function(opts)
     prompt = "Select parent revision: ",
   }, function(revision)
     if revision ~= nil then
+      vim.cmd('SessionSave')
       local changeId = vim.split(revision, " | ")[1]
       local result = vim.fn.system("jj new " .. changeId)
       vim.notify(result, vim.log.levels.INFO)
+      vim.cmd('SessionLoad')
+      vim.cmd('edit')
     end
   end)
 end, {});
@@ -155,8 +161,11 @@ vim.api.nvim_create_user_command("JJedit", function(opts)
   }, function(revision)
     if revision ~= nil then
       local changeId = vim.split(revision, " | ")[1]
+      vim.cmd('SessionSave')
       local result = vim.fn.system("jj edit " .. changeId)
       vim.notify(result, vim.log.levels.INFO)
+      vim.cmd('SessionLoad')
+      vim.cmd('edit')
     end
   end)
 end, {});

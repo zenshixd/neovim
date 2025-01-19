@@ -1,3 +1,35 @@
+local prettierls_config = {
+  default_config = {
+    cmd = { "prettierls", "--stdio" },
+    filetypes = {
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "vue",
+      "css",
+      "scss",
+      "less",
+      "html",
+      "json",
+      "jsonc",
+      "yaml",
+      "markdown",
+      "markdown.mdx",
+      "graphql",
+      "handlebars",
+      "svelte",
+      "astro",
+      "htmlangular",
+    },
+    root_dir = function(fname)
+      return vim.fs.root(fname, "package.json") and vim.fs.root(fname, "node_modules/prettier")
+    end,
+    single_file_support = true,
+    settings = {},
+  }
+}
+
 return {
   { "nvim-lua/plenary.nvim" },
   { "nvimtools/none-ls.nvim", },
@@ -9,8 +41,12 @@ return {
     lazy = false,
     config = function()
       require 'mason'.setup {}
-      local null_ls = require 'null-ls'
       local lspconfig = require 'lspconfig'
+      local configs = require 'lspconfig.configs'
+
+      if configs.prettierls == nil then
+        configs.prettierls = prettierls_config
+      end
 
       lspconfig.vtsls.setup {
         on_init = function(client)
@@ -36,6 +72,7 @@ return {
       }
 
       lspconfig.jsonls.setup {}
+      lspconfig.prettierls.setup {}
       lspconfig.eslint.setup {}
 
       lspconfig.angularls.setup {
@@ -61,14 +98,6 @@ return {
       lspconfig.stylelint_lsp.setup {
         filetypes = { "css", "scss", "less", "sass" }
       }
-
-      null_ls.setup({
-        sources = {
-          null_ls.builtins.formatting.prettierd,
-          null_ls.builtins.completion.spell,
-        },
-      })
-
 
       vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function()
