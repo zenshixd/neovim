@@ -1,8 +1,6 @@
 return {
   { "nvim-lua/plenary.nvim" },
-  { "nvimtools/none-ls.nvim", },
-  { "nvimtools/none-ls-extras.nvim" },
-  { 'echasnovski/mini.completion',  version = "*", config = true },
+  { 'echasnovski/mini.completion', version = "*", config = true },
   { "williamboman/mason.nvim" },
   {
     "neovim/nvim-lspconfig",
