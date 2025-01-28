@@ -1,35 +1,3 @@
-local prettierls_config = {
-  default_config = {
-    cmd = { "prettierls", "--stdio" },
-    filetypes = {
-      "javascript",
-      "javascriptreact",
-      "typescript",
-      "typescriptreact",
-      "vue",
-      "css",
-      "scss",
-      "less",
-      "html",
-      "json",
-      "jsonc",
-      "yaml",
-      "markdown",
-      "markdown.mdx",
-      "graphql",
-      "handlebars",
-      "svelte",
-      "astro",
-      "htmlangular",
-    },
-    root_dir = function(fname)
-      return vim.fs.root(fname, "package.json") and vim.fs.root(fname, "node_modules/prettier")
-    end,
-    single_file_support = true,
-    settings = {},
-  }
-}
-
 return {
   { "nvim-lua/plenary.nvim" },
   { "nvimtools/none-ls.nvim", },
@@ -45,7 +13,7 @@ return {
       local configs = require 'lspconfig.configs'
 
       if configs.prettierls == nil then
-        configs.prettierls = prettierls_config
+        configs.prettierls = require 'lspconfig.configs.prettierls'
       end
 
       lspconfig.vtsls.setup {

@@ -17,6 +17,20 @@ local conf_mapping = {
     })
     task.cmd = old_cmd
   end,
+  zig = function(task)
+    require 'dap'.run({
+      name = 'Debug zig',
+      type = "lldb",
+      request = 'attach',
+      cwd = task.cwd,
+      waitFor = true,
+    })
+    if task.status == overseer.STATUS.SUCCESS or task.status == overseer.STATUS.FAILURE then
+      task:restart()
+    else
+      task:start()
+    end
+  end,
 }
 
 
