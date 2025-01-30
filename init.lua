@@ -88,7 +88,21 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "OverseerList",
   callback = function(event)
-    vim.keymap.set('n', '<Esc>', '<C-w>p', { buffer = event.buf, silent = true })
+    vim.keymap.set('n', '<Esc>', function()
+      local windows = vim.api.nvim_tabpage_list_wins(0)
+
+      for _, win in ipairs(windows) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local is_overseer_list = vim.api.nvim_get_option_value('filetype', { buf = buf }) == 'OverseerList'
+        local is_terminal = vim.api.nvim_get_option_value('buftype', { buf = buf }) == 'terminal'
+        if not is_overseer_list and not is_terminal then
+          vim.api.nvim_set_current_win(win)
+          return
+        end
+      end
+
+      vim.notify("Couldn't change window", vim.log.levels.WARN)
+    end, { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<F12>', '<cmd>OverseerClose<cr>', { buffer = event.buf, silent = true })
     vim.keymap.set('n', 'a', '<C-w><C-w>a', { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<C-d>', '<C-w><C-w><C-d><C-w>p', { buffer = event.buf, silent = true })

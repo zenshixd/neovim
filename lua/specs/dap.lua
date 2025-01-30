@@ -16,7 +16,7 @@ return {
 
     dap.adapters.codelldb = {
       type = "executable",
-      command = vim.fn.stdpath('data') .. '/mason/packages/codelldb/extension/adapter/codelldb.exe',
+      command = vim.fn.stdpath('data') .. '/mason/packages/codelldb/extension/adapter/codelldb',
     }
 
     dap.configurations.zig = {
@@ -26,13 +26,21 @@ return {
         request = "launch",
         cwd = "${workspaceFolder}",
         program = function()
-          return vim.fn.input('Path to program: ', vim.fn.getcwd() .. '/', 'file')
+          local args = vim.fn.input("Build args: ")
+          local cmd = "zig build test:artifact"
+          if args ~= "" then
+            cmd = cmd .. " " .. args
+          end
+          local result = vim.fn.system(cmd)
+
+          if vim.v.shell_error ~= 0 then
+            vim.notify("Error building zig program", vim.log.levels.ERROR)
+            vim.notify(result, vim.log.levels.ERROR)
+            return
+          end
+
+          return result:gsub("%s+", "")
         end,
-        stopOnEntry = true,
-        -- args = { "build", "run", "${file}", "--", "--interactive" },
-        -- sourceLanguages = ["zig"],
-        -- noDebug = true,
-        -- trace = true,
       }
     }
   end,

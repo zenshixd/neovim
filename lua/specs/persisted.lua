@@ -16,7 +16,6 @@ return {
     })
     persisted.branch = function()
       if vim.loop.fs_stat(".jj") then
-        vim.notify("Using jj command")
         local branch = vim.fn.system(get_branch_name_template)
         if vim.v.shell_error ~= 0 then
           vim.notify("Error getting branch", vim.log.levels.ERROR)
@@ -34,12 +33,10 @@ return {
       end
 
       if vim.loop.fs_stat(".git") then
-        vim.notify("Using git command")
         local branch = vim.fn.systemlist("git branch --show-current")[1]
         return vim.v.shell_error == 0 and branch or nil
       end
 
-      vim.notify("Not a repository")
       return nil
     end
 
@@ -54,6 +51,12 @@ return {
         for _, buf in ipairs(bufs) do
           if vim.api.nvim_buf_get_name(buf):match("^oil") ~= nil then
             vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end
+        local tasks = overseer.list_tasks()
+        if #tasks > 0 then
+          for _, task in ipairs(tasks) do
+            task:dispose()
           end
         end
         overseer.load_task_bundle(get_cwd_as_name(), { ignore_missing = true, autostart = false })
