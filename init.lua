@@ -35,6 +35,7 @@ vim.keymap.set('n', '<leader>c', require('overseer_util').OverseerRun)
 vim.keymap.set("n", "<A-;>", ':BufferPrevious<CR>', { silent = true })
 vim.keymap.set("n", "<A-'>", ':BufferNext<cr>', { silent = true })
 vim.keymap.set('n', '<C-c>', ':BufferClose<cr>', { silent = true })
+vim.keymap.set('n', '<C-C>', ':bd!<cr>', { silent = true })
 vim.keymap.set('n', '<leader>dv', require('mini.diff').toggle_overlay)
 vim.keymap.set('n', '<leader>qf', function() vim.diagnostic.setqflist() end)
 
@@ -46,7 +47,7 @@ local telescope = require('telescope')
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', 'gb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {});
 vim.keymap.set('n', '<leader>fs', telescope.extensions.persisted.persisted, {})
@@ -68,7 +69,7 @@ vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = t
 vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
 
 local oil = require("oil")
-vim.keymap.set('n', '<leader>e', oil.open_float)
+vim.keymap.set('n', '<leader>e', oil.open)
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "oil",

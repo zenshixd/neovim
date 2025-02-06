@@ -83,5 +83,12 @@ return {
         },
       }
     end,
-  }
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    event = "VeryLazy",
+    opts = {
+      enable = true,
+    },
+  },
 }

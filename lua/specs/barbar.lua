@@ -6,6 +6,7 @@ return {
   },
   init = function() vim.g.barbar_auto_setup = false end,
   opts = {
+    animation = false,
     focus_on_close = "left",
     hide = { extensions = true },
   },
