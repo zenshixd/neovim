@@ -58,7 +58,7 @@ vim.api.nvim_create_user_command("JJdescribe", function()
   })
 end, {})
 
-vim.api.nvim_create_user_command("JJbl", function(opts)
+vim.api.nvim_create_user_command("JJbl", function()
   local bookmarks = vim.fn.system(bookmarks_list_template)
 
   if vim.v.shell_error ~= 0 then
@@ -80,13 +80,14 @@ vim.api.nvim_create_user_command("JJbl", function(opts)
           vim.notify(result, vim.log.levels.INFO)
           vim.cmd('SessionLoad')
           vim.cmd('edit')
+          OnRevisionChanged(branch)
         end
       end)
     end
   end)
 end, {});
 
-vim.api.nvim_create_user_command("JJbt", function(opts)
+vim.api.nvim_create_user_command("JJbt", function()
   local bookmarks = vim.fn.system(remote_bookmarks_list_template)
 
   if vim.v.shell_error ~= 0 then
@@ -105,7 +106,7 @@ vim.api.nvim_create_user_command("JJbt", function(opts)
   end)
 end, {});
 
-vim.api.nvim_create_user_command("JJbm", function(opts)
+vim.api.nvim_create_user_command("JJbm", function()
   local bookmarks = vim.fn.system(bookmarks_list_template)
 
   if vim.v.shell_error ~= 0 then
@@ -124,7 +125,7 @@ vim.api.nvim_create_user_command("JJbm", function(opts)
   end)
 end, {});
 
-vim.api.nvim_create_user_command("JJnew", function(opts)
+vim.api.nvim_create_user_command("JJnew", function()
   local revisions = vim.fn.system(revisions_list_template);
 
   if vim.v.shell_error ~= 0 then
@@ -143,11 +144,12 @@ vim.api.nvim_create_user_command("JJnew", function(opts)
       vim.notify(result, vim.log.levels.INFO)
       vim.cmd('SessionLoad')
       vim.cmd('edit')
+      OnRevisionChanged(revision)
     end
   end)
 end, {});
 
-vim.api.nvim_create_user_command("JJedit", function(opts)
+vim.api.nvim_create_user_command("JJedit", function()
   local revisions = vim.fn.system(revisions_list_template)
 
   if vim.v.shell_error ~= 0 then
@@ -166,6 +168,7 @@ vim.api.nvim_create_user_command("JJedit", function(opts)
       vim.notify(result, vim.log.levels.INFO)
       vim.cmd('SessionLoad')
       vim.cmd('edit')
+      OnRevisionChanged(revision)
     end
   end)
 end, {});
@@ -200,3 +203,10 @@ vim.api.nvim_create_user_command("JJpush", function()
 
   vim.cmd("!jj gp")
 end, {})
+
+function OnRevisionChanged(new_revision)
+  vim.api.nvim_exec_autocmds("User", {
+    pattern = "JJRevisionChanged",
+    data = { revision = new_revision },
+  })
+end
