@@ -67,7 +67,7 @@ vim.api.nvim_create_user_command("JJbl", function()
     return
   end
 
-  vim.ui.select(vim.split(bookmarks, "\n"), {
+  vim.ui.select(vim.split(bookmarks, "\n", { trimempty = true }), {
     prompt = "Select bookmark: ",
   }, function(branch)
     if branch ~= nil then
@@ -96,7 +96,7 @@ vim.api.nvim_create_user_command("JJbt", function()
     return
   end
 
-  vim.ui.select(vim.split(bookmarks, "\n"), {
+  vim.ui.select(vim.split(bookmarks, "\n", { trimempty = true }), {
     prompt = "Select bookmark to track: ",
   }, function(branch)
     if branch ~= nil then
@@ -115,7 +115,7 @@ vim.api.nvim_create_user_command("JJbm", function()
     return
   end
 
-  vim.ui.select(vim.split(bookmarks, "\n"), {
+  vim.ui.select(vim.split(bookmarks, "\n", { trimempty = true }), {
     prompt = "Select bookmark to move: ",
   }, function(branch)
     if branch ~= nil then
@@ -134,7 +134,7 @@ vim.api.nvim_create_user_command("JJnew", function()
     return
   end
 
-  vim.ui.select(vim.split(revisions, "\n"), {
+  vim.ui.select(vim.split(revisions, "\n", { trimempty = true }), {
     prompt = "Select parent revision: ",
   }, function(revision)
     if revision ~= nil then
@@ -158,7 +158,7 @@ vim.api.nvim_create_user_command("JJedit", function()
     return
   end
 
-  vim.ui.select(vim.split(revisions, "\n"), {
+  vim.ui.select(vim.split(revisions, "\n", { trimempty = true }), {
     prompt = "Select revision to edit: ",
   }, function(revision)
     if revision ~= nil then
