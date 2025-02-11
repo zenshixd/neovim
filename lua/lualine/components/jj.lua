@@ -1,7 +1,7 @@
 local M = require('lualine.component'):extend()
 
 local get_branch_name_template =
-[[jj bookmark list -r ::@ -T "concat(truncate_end(36, self.name()), \"\n\")" --quiet --ignore-working-copy]]
+[[jj bookmark list -r @-:: -T "concat(truncate_end(36, self.name()), \"\n\")" --quiet --ignore-working-copy]]
 
 local buf_to_branch = {}
 

@@ -19,7 +19,7 @@ vim.api.nvim_create_user_command("JJ", function(opts)
   vim.notify(result, vim.log.levels.INFO)
 end, {
   nargs = '*'
-});
+})
 
 vim.api.nvim_create_user_command("JJdescribe", function()
   local current_description = vim.split(

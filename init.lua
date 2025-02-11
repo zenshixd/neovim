@@ -1,5 +1,6 @@
 require('init_lazy')
 require 'jj'
+local Snacks = require('snacks')
 
 vim.cmd [[colorscheme onenord]]
 vim.opt.background = 'light'
@@ -21,6 +22,12 @@ vim.opt.hidden = false
 vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
 vim.o.undofile = true
 
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+  callback = function()
+    vim.cmd [[checktime]]
+  end
+})
+
 vim.keymap.set({ 'i', 'n', 'v' }, '<Home>', function()
   local cursor = vim.api.nvim_win_get_cursor(0)
   vim.cmd [[normal! ^]]
@@ -34,28 +41,28 @@ vim.keymap.set('n', '<F12>', ':OverseerOpen bottom<CR>', { silent = true })
 vim.keymap.set('n', '<leader>c', require('overseer_util').OverseerRun)
 vim.keymap.set("n", "<A-;>", ':BufferPrevious<CR>', { silent = true })
 vim.keymap.set("n", "<A-'>", ':BufferNext<cr>', { silent = true })
-vim.keymap.set('n', '<C-c>', ':BufferClose<cr>', { silent = true })
+vim.keymap.set('n', '<C-c>', Snacks.bufdelete.delete, { silent = true })
 vim.keymap.set('n', '<C-C>', ':bd!<cr>', { silent = true })
 vim.keymap.set('n', '<leader>dv', require('mini.diff').toggle_overlay)
 vim.keymap.set('n', '<leader>qf', function() vim.diagnostic.setqflist() end)
+vim.keymap.set({ 'i', 'n', 'x' }, '<S-Up>', '<Up>')
+vim.keymap.set({ 'i', 'n', 'x' }, '<S-Down>', '<Down>')
 
 local ufo = require('ufo')
 vim.keymap.set('n', 'zR', ufo.openAllFolds)
 vim.keymap.set('n', 'zM', ufo.closeAllFolds)
 
-local telescope = require('telescope')
-local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', 'gb', builtin.buffers, {})
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {});
-vim.keymap.set('n', '<leader>fs', telescope.extensions.persisted.persisted, {})
+vim.keymap.set('n', '<leader>ff', Snacks.picker.files, {})
+vim.keymap.set('n', '<leader>fg', Snacks.picker.grep, {})
+vim.keymap.set('n', '<leader>fd', Snacks.picker.diagnostics, {})
+vim.keymap.set('n', '<leader>;', Snacks.picker.buffers, {})
+vim.keymap.set('n', 'gb', Snacks.picker.buffers, {})
+vim.keymap.set('n', '<leader>fh', Snacks.picker.help, {})
 vim.keymap.set('n', 'ga', vim.lsp.buf.code_action)
-vim.keymap.set('n', 'gr', builtin.lsp_references)
-vim.keymap.set('n', 'gt', builtin.lsp_type_definitions)
-vim.keymap.set('n', 'gi', builtin.lsp_implementations)
-vim.keymap.set('n', 'gd', builtin.lsp_definitions)
+vim.keymap.set('n', 'gr', Snacks.picker.lsp_references)
+vim.keymap.set('n', 'gt', Snacks.picker.lsp_type_definitions)
+vim.keymap.set('n', 'gi', Snacks.picker.lsp_implementations)
+vim.keymap.set('n', 'gd', Snacks.picker.lsp_definitions)
 vim.keymap.set('n', 'gf', vim.lsp.buf.format)
 vim.keymap.set('n', 'gR', vim.lsp.buf.rename)
 
@@ -135,13 +142,5 @@ vim.api.nvim_create_autocmd("FileType", {
     end, { buffer = event.buf, silent = true })
     vim.keymap.set('n', '<C-c>', '<cmd>OverseerQuickAction dispose<cr>',
       { buffer = event.buf, silent = true })
-  end
-})
-
-vim.api.nvim_create_autocmd("WinLeave", {
-  callback = function()
-    if vim.bo.ft == "TelescopePrompt" and vim.fn.mode() == "i" then
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "i", true)
-    end
   end
 })

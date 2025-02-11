@@ -1,6 +1,10 @@
 return {
   { "nvim-lua/plenary.nvim" },
-  { 'echasnovski/mini.completion', version = "*", config = true },
+  {
+    'echasnovski/mini.completion',
+    version = "*",
+    opts = {},
+  },
   { "williamboman/mason.nvim" },
   {
     "neovim/nvim-lspconfig",
@@ -21,22 +25,7 @@ return {
         end,
       }
 
-      lspconfig.lua_ls.setup {
-        on_init = function(client)
-          client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-            runtime = {
-              version = "LuaJIT",
-            },
-            workspace = {
-              library = {
-                vim.env.VIMRUNTIME
-              },
-            },
-          })
-        end,
-        settings = { Lua = {} },
-      }
-
+      lspconfig.lua_ls.setup {}
       lspconfig.jsonls.setup {}
       lspconfig.prettierls.setup {}
       lspconfig.eslint.setup {}
@@ -68,6 +57,13 @@ return {
       vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function()
           vim.lsp.buf.format()
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("Filetype", {
+        pattern = "snacks_picker_input",
+        callback = function(event)
+          vim.b.minicompletion_disable = true
         end,
       })
     end,
