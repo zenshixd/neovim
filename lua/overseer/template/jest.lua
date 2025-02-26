@@ -14,6 +14,13 @@ local jest_test_query = [[
   @scope-root)
 ]]
 
+-- @param str: string
+function escape_regex_chars(str)
+  local quotepattern = '([' .. ("%^$().[]*+-?"):gsub("(.)", "%%%1") .. '])'
+
+  return str:gsub(quotepattern, "\\%1")
+end
+
 return {
   generator = function(search, cb)
     local jest_configs = {
@@ -43,7 +50,7 @@ return {
           builder = function()
             return {
               cmd = { 'node' },
-              args = { jest_path, '--config=' .. vim.fs.basename(config_path[1]), '--testPathPattern=' .. test_file, '--testNamePattern=' .. test },
+              args = { jest_path, '--config=' .. vim.fs.basename(config_path[1]), '--testPathPattern=' .. test_file, '--testNamePattern=' .. escape_regex_chars(test) },
               name = test_file .. ' -> ' .. test,
               cwd = jest_cwd,
               components = { "default", "on_complete_dispose" },

@@ -56,7 +56,9 @@ return {
         local tasks = overseer.list_tasks()
         if #tasks > 0 then
           for _, task in ipairs(tasks) do
-            task:dispose()
+            if not task:is_running() then
+              task:dispose()
+            end
           end
         end
         overseer.load_task_bundle(get_cwd_as_name(), { ignore_missing = true, autostart = false })

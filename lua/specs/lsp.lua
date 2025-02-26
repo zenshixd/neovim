@@ -61,8 +61,8 @@ return {
       })
 
       vim.api.nvim_create_autocmd("Filetype", {
-        pattern = "snacks_picker_input",
-        callback = function(event)
+        pattern = "snacks_picker_input,snacks_input,dap-repl,OverseerForm",
+        callback = function()
           vim.b.minicompletion_disable = true
         end,
       })

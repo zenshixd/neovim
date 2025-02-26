@@ -11,6 +11,7 @@ return {
       templates = { 'shell', 'npm', 'jest', "zig" },
       actions = {
         debug = require('overseer.actions.debug'),
+        update_snapshots = require('overseer.actions.update_snapshots'),
         watch = false,
       },
       component_aliases = {

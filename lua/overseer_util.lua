@@ -42,6 +42,15 @@ function M.OverseerSelectAction(task)
     }
   }
 
+  if task.name:match("^zig build test") ~= nil then
+    table.insert(actions, {
+      name = "update snapshots",
+      run = function()
+        action_util.run_task_action(task, "update_snapshots")
+      end,
+    })
+  end
+
   vim.ui.select(actions, {
     prompt = "Select action to run: ",
     format_item = function(item)
