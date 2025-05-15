@@ -1,14 +1,13 @@
-local overseer = require 'overseer'
-
 return {
   desc = "Update snapshots",
-  condition = function()
+  condition = function(task)
     return true
   end,
   run = function(task)
+    local overseer = require 'overseer'
     local old_cmd = task.cmd
-    task.cmd = vim.list_extend(task.cmd, { '-Dupdate' })
-    if task.status == overseer.STATUS.SUCCESS or task.status == overseer.STATUS.FAILURE then
+    task.cmd = vim.list_extend(task.cmd, { "-Dupdate" })
+    if task.status == overseer.STATUS.SUCCESS or task.status == overseer.STATUS.FAILURE or task.status == overseer.STATUS.CANCELED then
       task:restart()
     else
       task:start()

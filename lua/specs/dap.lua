@@ -32,6 +32,15 @@ return {
           args = function()
             return vim.split(vim.fn.input("Arguments: "), " ", { trimempty = true })
           end,
+        },
+        {
+          name = "Attacj",
+          type = "codelldb",
+          request = "attach",
+          cwd = "${workspaceFolder}",
+          pid = function()
+            return vim.fn.input("Process ID: ")
+          end,
         }
       }
     end,

@@ -119,7 +119,7 @@ vim.api.nvim_create_user_command("JJbm", function()
     prompt = "Select bookmark to move: ",
   }, function(branch)
     if branch ~= nil then
-      local result = vim.fn.system("jj bookmark move " .. branch)
+      local result = vim.fn.system("jj bookmark move " .. branch .. " --to=@")
       vim.notify(result, vim.log.levels.INFO)
     end
   end)
@@ -197,6 +197,7 @@ end, {
 })
 
 vim.api.nvim_create_user_command("JJpush", function()
+  vim.cmd("!jj fix")
   if vim.uv.fs_stat('./.husky/pre-commit') then
     vim.cmd("!./.husky/pre-commit")
   end

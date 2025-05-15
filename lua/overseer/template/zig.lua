@@ -74,9 +74,10 @@ return {
         tags = { overseer.TAG.TEST },
         priority = 1,
         builder = function()
+          local args = { 'build', 'test', '-Dfilter=' .. single_test_filter }
           return {
             cmd = { 'zig' },
-            args = { 'build', 'test', '-Dfilter=' .. single_test_filter },
+            args = args,
             name = "zig build test -Dfilter=" .. single_test_filter,
             cwd = test_cwd,
             components = { "default", "on_complete_dispose" },
@@ -90,9 +91,10 @@ return {
       tags = { overseer.TAG.TEST },
       priority = 2,
       builder = function()
+        local args = { 'build', 'test', '-Dfilter=' .. test_filter }
         return {
           cmd = { 'zig' },
-          args = { 'build', 'test', '-Dfilter=' .. test_filter },
+          args = args,
           name = "zig build test -Dfilter=" .. test_filter,
           cwd = test_cwd,
           components = { "default", "on_complete_dispose" },

@@ -2,7 +2,7 @@ return {
   { "nvim-lua/plenary.nvim" },
   {
     'echasnovski/mini.completion',
-    version = "*",
+    version = false,
     opts = {},
   },
   { "williamboman/mason.nvim" },
@@ -12,11 +12,6 @@ return {
     config = function()
       require 'mason'.setup {}
       local lspconfig = require 'lspconfig'
-      local configs = require 'lspconfig.configs'
-
-      if configs.prettierls == nil then
-        configs.prettierls = require 'lspconfig.configs.prettierls'
-      end
 
       lspconfig.vtsls.setup {
         on_init = function(client)
@@ -26,9 +21,17 @@ return {
       }
 
       lspconfig.lua_ls.setup {}
-      lspconfig.jsonls.setup {}
-      lspconfig.prettierls.setup {}
+      lspconfig.jsonls.setup {
+        init_options = {
+          provideFormatter = false,
+        }
+      }
       lspconfig.eslint.setup {}
+      lspconfig.cssls.setup {
+        init_options = {
+          provideFormatter = false,
+        }
+      }
 
       lspconfig.angularls.setup {
         autostart = false,
@@ -54,6 +57,10 @@ return {
         filetypes = { "css", "scss", "less", "sass" }
       }
 
+      vim.lsp.enable({
+        "prettierls"
+      })
+
       vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function()
           vim.lsp.buf.format()
@@ -66,6 +73,15 @@ return {
           vim.b.minicompletion_disable = true
         end,
       })
+
+      -- vim.api.nvim_create_autocmd("LspAttach", {
+      --   callback = function(event)
+      --     local client_id = event.data.client_id
+      --     vim.lsp.completion.enable(true, client_id, 0, {
+      --       autotrigger = true,
+      --     })
+      --   end
+      -- })
     end,
   }
 }

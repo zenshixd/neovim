@@ -11,8 +11,10 @@ vim.opt.expandtab = true
 vim.opt.ignorecase = true
 vim.opt.number = true
 vim.opt.cursorline = true
+vim.opt.foldmethod = "expr"
+vim.opt.foldtext = "getline(v:foldstart)"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldcolumn = '1'
-vim.opt.foldmethod = 'manual'
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.sessionoptions = 'buffers,curdir,folds,winsize,winpos'
@@ -21,6 +23,8 @@ vim.g.zig_fmt_autosave = false
 vim.opt.hidden = false
 vim.opt.omnifunc = 'v:lua.vim.lsp.omnifunc'
 vim.o.undofile = true
+vim.diagnostic.config({ virtual_text = true })
+-- vim.opt.completeopt = 'menuone,noinsert'
 
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   callback = function()
@@ -39,32 +43,43 @@ end)
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { silent = true })
 vim.keymap.set('n', '<F12>', ':OverseerOpen bottom<CR>', { silent = true })
 vim.keymap.set('n', '<leader>c', require('overseer_util').OverseerRun)
-vim.keymap.set("n", "<A-;>", ':BufferPrevious<CR>', { silent = true })
-vim.keymap.set("n", "<A-'>", ':BufferNext<cr>', { silent = true })
-vim.keymap.set('n', '<C-c>', Snacks.bufdelete.delete, { silent = true })
-vim.keymap.set('n', '<C-C>', ':bd!<cr>', { silent = true })
+vim.keymap.set("n", "<A-;>", ':BufferLineCyclePrev<CR>', { silent = true })
+vim.keymap.set("n", "<A-'>", ':BufferLineCycleNext<cr>', { silent = true })
+vim.keymap.set('n', '<C-c>', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.cmd("BufferLineCyclePrev")
+  vim.cmd("bd! " .. bufnr)
+end, { silent = true })
 vim.keymap.set('n', '<leader>dv', require('mini.diff').toggle_overlay)
 vim.keymap.set('n', '<leader>qf', function() vim.diagnostic.setqflist() end)
 vim.keymap.set({ 'i', 'n', 'x' }, '<S-Up>', '<Up>')
 vim.keymap.set({ 'i', 'n', 'x' }, '<S-Down>', '<Down>')
-
-local ufo = require('ufo')
-vim.keymap.set('n', 'zR', ufo.openAllFolds)
-vim.keymap.set('n', 'zM', ufo.closeAllFolds)
+vim.keymap.set({ 'n', 'i', 's' }, '<C-Left>', function()
+  if vim.snippet.active({ direction = -1 }) then
+    return '<Cmd>lua vim.snippet.jump(-1)<CR>'
+  end
+end, { expr = true, silent = true })
+vim.keymap.set({ 'n', 'i', 's' }, '<C-Right>', function()
+  if vim.snippet.active({ direction = 1 }) then
+    return '<Cmd>lua vim.snippet.jump(1)<CR>'
+  end
+end, { expr = true, silent = true })
 
 vim.keymap.set('n', '<leader>ff', Snacks.picker.files, {})
 vim.keymap.set('n', '<leader>fg', Snacks.picker.grep, {})
+vim.keymap.set('n', '<leader>fG', function()
+  vim.ui.input({
+    default = vim.fn.expand("%:h"),
+    prompt = 'Directory to search'
+  }, function(dir)
+    Snacks.picker.grep({ dirs = { dir } })
+  end)
+end, {})
 vim.keymap.set('n', '<leader>fd', Snacks.picker.diagnostics, {})
 vim.keymap.set('n', '<leader>;', Snacks.picker.buffers, {})
 vim.keymap.set('n', 'gb', Snacks.picker.buffers, {})
 vim.keymap.set('n', '<leader>fh', Snacks.picker.help, {})
-vim.keymap.set('n', 'ga', vim.lsp.buf.code_action)
-vim.keymap.set('n', 'gr', Snacks.picker.lsp_references)
-vim.keymap.set('n', 'gt', Snacks.picker.lsp_type_definitions)
-vim.keymap.set('n', 'gi', Snacks.picker.lsp_implementations)
-vim.keymap.set('n', 'gd', Snacks.picker.lsp_definitions)
-vim.keymap.set('n', 'gf', vim.lsp.buf.format)
-vim.keymap.set('n', 'gR', vim.lsp.buf.rename)
+vim.keymap.set('n', '<leader>fr', Snacks.picker.recent, {})
 
 -- DAP
 vim.keymap.set('n', '<leader>db', ":DapToggleBreakpoint<cr>", { silent = true })
@@ -106,14 +121,6 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "oil",
   callback = function(event)
     vim.keymap.set('n', 'q', oil.close, { buffer = event.buf, silent = true })
-  end
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "qf",
-  callback = function(event)
-    vim.keymap.set('n', ',', '<cmd>cprevious<cr>zz<cmd>wincmd p<cr>', { buffer = event.buf, silent = true })
-    vim.keymap.set('n', '.', '<cmd>cnext<cr>zz<cmd>wincmd p<cr>', { buffer = event.buf, silent = true })
   end
 })
 
@@ -168,3 +175,20 @@ vim.api.nvim_create_autocmd("FileType", {
       { buffer = event.buf, silent = true })
   end
 })
+
+vim.api.nvim_create_user_command("Ref", function(opts)
+  local buf_name = vim.api.nvim_buf_get_name(0)
+  local name = vim.fs.basename(buf_name)
+  name = name:gsub("%.ts", "$1.js")
+
+  vim.cmd("edit .reftests/baselines/reference/" .. name)
+end, {})
+
+
+vim.api.nvim_create_user_command("Local", function(opts)
+  local buf_name = vim.api.nvim_buf_get_name(0)
+  local name = vim.fs.basename(buf_name)
+  name = name:gsub("%.ts", "$1.js")
+
+  vim.cmd("edit .reftests/baselines/local/" .. name)
+end, {})
