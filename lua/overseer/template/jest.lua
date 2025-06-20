@@ -50,7 +50,7 @@ return {
           builder = function()
             return {
               cmd = { 'node' },
-              args = { jest_path, '--config=' .. vim.fs.basename(config_path[1]), '--testPathPattern=' .. test_file, '--testNamePattern=' .. escape_regex_chars(test) },
+              args = { jest_path, '--config=' .. vim.fs.basename(config_path[1]), '--testPathPatterns=' .. escape_regex_chars(test_file), '--testNamePattern=' .. escape_regex_chars(test) },
               name = test_file .. ' -> ' .. test,
               cwd = jest_cwd,
               components = { "default", "on_complete_dispose" },
@@ -67,7 +67,7 @@ return {
       builder = function()
         return {
           cmd = { 'node' },
-          args = { jest_path, '--config=' .. vim.fs.basename(config_path[1]), '--testPathPattern=' .. test_file },
+          args = { jest_path, '--config=' .. vim.fs.basename(config_path[1]), '--testPathPatterns=' .. escape_regex_chars(test_file) },
           name = test_file,
           cwd = jest_cwd,
           components = { "default", "on_complete_dispose" },

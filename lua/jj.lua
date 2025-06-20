@@ -80,7 +80,6 @@ vim.api.nvim_create_user_command("JJbl", function()
           vim.notify(result, vim.log.levels.INFO)
           vim.cmd('SessionLoad')
           vim.cmd('edit')
-          OnRevisionChanged(branch)
         end
       end)
     end
@@ -144,7 +143,6 @@ vim.api.nvim_create_user_command("JJnew", function()
       vim.notify(result, vim.log.levels.INFO)
       vim.cmd('SessionLoad')
       vim.cmd('edit')
-      OnRevisionChanged(revision)
     end
   end)
 end, {});
@@ -168,7 +166,6 @@ vim.api.nvim_create_user_command("JJedit", function()
       vim.notify(result, vim.log.levels.INFO)
       vim.cmd('SessionLoad')
       vim.cmd('edit')
-      OnRevisionChanged(revision)
     end
   end)
 end, {});
@@ -199,15 +196,9 @@ end, {
 vim.api.nvim_create_user_command("JJpush", function()
   vim.cmd("!jj fix")
   if vim.uv.fs_stat('./.husky/pre-commit') then
+    vim.cmd("!git add .")
     vim.cmd("!./.husky/pre-commit")
   end
 
   vim.cmd("!jj gp")
 end, {})
-
-function OnRevisionChanged(new_revision)
-  vim.api.nvim_exec_autocmds("User", {
-    pattern = "JJRevisionChanged",
-    data = { revision = new_revision },
-  })
-end

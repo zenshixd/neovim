@@ -10,54 +10,76 @@ return {
     "neovim/nvim-lspconfig",
     lazy = false,
     config = function()
+      local function is_node_modules(bufnr)
+        local bufname = vim.api.nvim_buf_get_name(bufnr)
+        return bufname:find("node_modules") ~= nil
+      end
+
+      vim.lsp.config("eslint", {
+        handlers = {
+          ["textDocument/diagnostic"] = function(err, result, ctx)
+            if err ~= nil and err.code == -32603 then
+              vim.notify("Failed to get ESLint configuration, stopping server", vim.log.levels.WARN, {})
+              local client = vim.lsp.get_client_by_id(ctx.client_id)
+              if client == nil then
+                vim.notify("Failed to stop ESLint server", vim.log.levels.ERROR, {})
+                return
+              end
+
+              client:stop(false)
+              return
+            end
+
+            vim.lsp.handlers["textDocument/diagnostic"](err, result, ctx)
+          end,
+        }
+      })
+
       require 'mason'.setup {}
-      local lspconfig = require 'lspconfig'
-
-      lspconfig.vtsls.setup {
-        on_init = function(client)
-          client.server_capabilities.documentFormattingProvider = nil
-          client.server_capabilities.documentRangeFormattingProvider = nil
-        end,
-      }
-
-      lspconfig.lua_ls.setup {}
-      lspconfig.jsonls.setup {
+      vim.lsp.config('vtsls', {
+        settings = {
+          typescript = {
+            format = {
+              enable = false,
+            },
+          },
+          javascript = {
+            format = {
+              enable = false,
+            },
+          },
+        },
+      })
+      vim.lsp.config('angularls', {
+        capabilities = {
+          textDocument = {
+            formatting = nil,
+            rangeFormatting = nil,
+          }
+        }
+      })
+      vim.lsp.config('stylelint_lsp', {
+        init_options = {
+          filetypes = { "css", "scss", "less", "sass" },
+        }
+      })
+      vim.lsp.config('jsonls', {
+        provideFormatter = false,
+      })
+      vim.lsp.config('cssls', {
         init_options = {
           provideFormatter = false,
         }
-      }
-      lspconfig.eslint.setup {}
-      lspconfig.cssls.setup {
-        init_options = {
-          provideFormatter = false,
-        }
-      }
-
-      lspconfig.angularls.setup {
-        autostart = false,
-        on_init = function(client)
-          client.server_capabilities.codeActionProvider = nil
-          client.server_capabilities.documentFormattingProvider = nil
-          client.server_capabilities.documentRangeFormattingProvider = nil
-        end,
-        root_dir = function(fname)
-          return lspconfig.util.root_pattern("angular.json")(fname) or
-              lspconfig.util.find_package_json_ancestor(fname) or
-              lspconfig.util.find_git_ancestor(fname)
-        end,
-      }
-
-      lspconfig.zls.setup {
-        on_attach = function()
-          vim.g.zig_fmt_autosave = false
-        end,
-      }
-
-      lspconfig.stylelint_lsp.setup {
-        filetypes = { "css", "scss", "less", "sass" }
-      }
-
+      })
       vim.lsp.enable({
+        "stylelint_lsp",
+        -- "angularls",
+        "cssls",
+        "jsonls",
+        "lua_ls",
+        "eslint",
+        "vtsls",
+        "zls",
         "prettierls"
       })
 
@@ -73,15 +95,6 @@ return {
           vim.b.minicompletion_disable = true
         end,
       })
-
-      -- vim.api.nvim_create_autocmd("LspAttach", {
-      --   callback = function(event)
-      --     local client_id = event.data.client_id
-      --     vim.lsp.completion.enable(true, client_id, 0, {
-      --       autotrigger = true,
-      --     })
-      --   end
-      -- })
     end,
   }
 }
