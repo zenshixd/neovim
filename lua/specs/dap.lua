@@ -22,19 +22,22 @@ return {
 
       dap.configurations.zig = {
         {
-          name = "Launch zig program",
+          name = "Debug program",
           type = "codelldb",
           request = "launch",
           cwd = "${workspaceFolder}",
-          program = function()
-            return vim.fn.input("Program: ")
-          end,
-          args = function()
-            return vim.split(vim.fn.input("Arguments: "), " ", { trimempty = true })
-          end,
+          program = "${workspaceFolder}/zig-out/bin/${workspaceFolderBasename}",
         },
         {
-          name = "Attacj",
+          name = "Debug test",
+          type = "codelldb",
+          request = "launch",
+          cwd = "${workspaceFolder}",
+          program = "${workspaceFolder}/zig-out/bin/test",
+          initCommands = { "settings set target.process.follow-fork-mode child" },
+        },
+        {
+          name = "Attach",
           type = "codelldb",
           request = "attach",
           cwd = "${workspaceFolder}",
